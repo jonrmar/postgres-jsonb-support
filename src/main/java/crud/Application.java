@@ -17,7 +17,12 @@ public class Application {
 
         System.out.println("### Testing read operation ###");
         Entity entity = recordEntityDAO.read(1L);
-        System.out.println("Result from saving on db: "+ entity);
+        System.out.println("Result from reading on db: "+ entity);
+
+        System.out.println("### Testing delete operation ###");
+        result = recordEntityDAO.delete(1L);
+        entity = recordEntityDAO.read(1L);
+        System.out.println("Result from deleting on db: "+ result + " and reading: "+ entity);
 
     }
 }

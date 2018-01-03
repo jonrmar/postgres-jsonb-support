@@ -4,6 +4,7 @@ import crud.domain.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EntityDAO<T extends Entity> {
 
@@ -24,5 +25,17 @@ public class EntityDAO<T extends Entity> {
                 .filter(entity -> entity.getId().equals(id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public boolean delete(Long id){
+        entities.stream()
+                .filter(entity -> entity.getId().equals(id))
+                .findFirst()
+                .ifPresent( entityFound -> {
+                    entities.remove(entityFound);
+                });
+
+        return entities.stream()
+                .noneMatch(entity -> entity.getId().equals(id));
     }
 }
