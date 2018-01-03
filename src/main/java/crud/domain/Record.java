@@ -1,6 +1,6 @@
 package crud.domain;
 
-public class Record implements Entity{
+public class Record implements Entity {
     private Long id;
 
     @Override

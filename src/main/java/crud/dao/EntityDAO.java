@@ -4,7 +4,6 @@ import crud.domain.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class EntityDAO<T extends Entity> {
 
@@ -14,24 +13,34 @@ public class EntityDAO<T extends Entity> {
         this.entities = new ArrayList<>();
     }
 
-    public boolean save(Entity entity){
+    public boolean save(Entity entity) {
         entities.add(entity);
 
         return entities.contains(entity);
     }
 
-    public Entity read(Long id){
+    public Entity read(Long id) {
         return entities.stream()
                 .filter(entity -> entity.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public boolean delete(Long id){
+    public boolean update(Entity entity) {
+        entities.stream()
+                .filter(entityDB -> entityDB.getId().equals(entity.getId()))
+                .findFirst()
+                .ifPresent(entity1 -> entity1.setId(entity.getId()));
+
+        return entities.stream()
+                .anyMatch(entityFiltered -> entityFiltered.getId().equals(entity.getId()));
+    }
+
+    public boolean delete(Long id) {
         entities.stream()
                 .filter(entity -> entity.getId().equals(id))
                 .findFirst()
-                .ifPresent( entityFound -> {
+                .ifPresent(entityFound -> {
                     entities.remove(entityFound);
                 });
 
