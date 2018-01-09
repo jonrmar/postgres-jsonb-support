@@ -1,8 +1,8 @@
 package crud;
 
-import crud.dao.EntityDAO;
-import crud.domain.Entity;
-import crud.domain.Record;
+import dao.EntityDAO;
+import domain.Entity;
+import domain.Record;
 
 public class Application {
 

@@ -1,4 +1,4 @@
-package crud.domain;
+package domain;
 
 public interface Entity {
     public Long getId();

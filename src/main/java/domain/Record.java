@@ -1,4 +1,4 @@
-package crud.domain;
+package domain;
 
 public class Record implements Entity {
     private Long id;

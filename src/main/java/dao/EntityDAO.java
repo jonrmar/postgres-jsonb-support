@@ -1,6 +1,6 @@
-package crud.dao;
+package dao;
 
-import crud.domain.Entity;
+import domain.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
