@@ -6,7 +6,7 @@ This project has the objective to supply an easiest way to map plain Java Object
 
 Go to resource directory and run:
 
-`docker-composer up`
+`docker-compose up`
 
 Then run main class for operation examples.
 
