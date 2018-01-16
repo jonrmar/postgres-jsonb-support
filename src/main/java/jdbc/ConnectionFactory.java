@@ -8,7 +8,7 @@ public class ConnectionFactory {
 
     public Connection getConnection(){
         try {
-            return DriverManager.getConnection("jdbc:postgresql://<IP>/<DATABASE>", "<USERNAME>", "<PASSWORD>");
+            return DriverManager.getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
         } catch (SQLException e) {
             throw  new RuntimeException(e);
         }

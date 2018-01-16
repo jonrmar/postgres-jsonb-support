@@ -38,7 +38,7 @@ public class Application {
         recordEntityDAO = new EntityDAO<>();
         recordEntityDAO.delete(1L);
         entities = recordEntityDAO.read(1L);
-        System.out.println("Result from updating on db:");
+        System.out.println("Result from delete on db:");
         for (Entity entity: entities)
             System.out.println(entity);
     }
