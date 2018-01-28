@@ -2,7 +2,6 @@ package dao;
 
 import domain.Entity;
 import domain.Record;
-import jdbc.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,8 +14,8 @@ public class EntityDAO<T extends Entity> {
 
     private Connection connection;
 
-    public EntityDAO() {
-        this.connection = new ConnectionFactory().getConnection();
+    public EntityDAO(Connection connection) {
+        this.connection = connection;
     }
 
     public void save(Entity entity) {
