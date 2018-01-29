@@ -1,5 +1,6 @@
-package dao;
+package unit.dao;
 
+import dao.EntityDAO;
 import domain.Record;
 import org.junit.Before;
 import org.junit.Test;
