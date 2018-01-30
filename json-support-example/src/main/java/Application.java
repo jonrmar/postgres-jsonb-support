@@ -5,13 +5,19 @@ import jdbc.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Application {
 
     public static void main(String[] args) throws SQLException {
         Record record = new Record();
         record.setId(1L);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "John Doe");
+        map.put("age", "30");
+        record.setDocument(map);
 
         //Creating DB connection
         Connection connection = new ConnectionFactory().getConnection();
@@ -21,9 +27,9 @@ public class Application {
         System.out.println("### Testing save operation ### ");
         recordEntityDAO.save(record);
 
-        System.out.println("### Testing read operation ###");
+        System.out.println("### Testing findAll operation ###");
         recordEntityDAO = new EntityDAO<>(connection);
-        List<Entity> entities = recordEntityDAO.read(1L);
+        List<Entity> entities = recordEntityDAO.findAll();
 
         System.out.println("Result from reading on db:");
         for (Entity entity: entities)
@@ -32,9 +38,12 @@ public class Application {
         connection = new ConnectionFactory().getConnection();
         System.out.println("### Testing update operation ###");
         recordEntityDAO = new EntityDAO<>(connection);
-        record.setId(2L);
+        record.setId(1L);
+        map.remove("name");
+        map.put("name", "Name Test");
+        record.setDocument(map);
         recordEntityDAO.update(record);
-        entities = recordEntityDAO.read(2L);
+        entities = recordEntityDAO.findAll();
         System.out.println("Result from updating on db:");
         for (Entity entity: entities)
             System.out.println(entity);
@@ -43,7 +52,7 @@ public class Application {
         System.out.println("### Testing delete operation ###");
         recordEntityDAO = new EntityDAO<>(connection);
         recordEntityDAO.delete(1L);
-        entities = recordEntityDAO.read(1L);
+        entities = recordEntityDAO.findAll();
         System.out.println("Result from delete on db:");
         for (Entity entity: entities)
             System.out.println(entity);

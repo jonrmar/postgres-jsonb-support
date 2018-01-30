@@ -39,7 +39,7 @@ public class EntityDAOTest {
 
         entityDAO.save(record);
 
-        List entity = entityDAO.read(2L);
+        List entity = entityDAO.findAll(2L);
 
         assertEquals(entity.size(), 1);
         assertEquals(entity, mockRecordList());
@@ -53,7 +53,7 @@ public class EntityDAOTest {
     @Test
     public void readEmptyDBTest() throws SQLException {
         when(resultSet.next()).thenReturn(false);
-        List entity = entityDAO.read(2L);
+        List entity = entityDAO.findAll(2L);
 
         assertEquals(entity.size(), 0);
     }

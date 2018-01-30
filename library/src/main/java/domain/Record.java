@@ -1,21 +1,36 @@
 package domain;
 
+import java.util.Map;
+
 public class Record implements Entity {
     private Long id;
+    private Map<String, Object> document;
 
     @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public Map<String, Object> getDocument() {
+        return document;
+    }
+
+    @Override
+    public void setDocument(Map<String, Object> document) {
+        this.document = document;
     }
 
     @Override
     public String toString() {
         return "Record{" +
                 "id=" + id +
+                ", document=" + document +
                 '}';
     }
 

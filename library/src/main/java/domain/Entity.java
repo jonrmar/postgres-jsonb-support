@@ -1,6 +1,10 @@
 package domain;
 
+import java.util.Map;
+
 public interface Entity {
-    public Long getId();
-    public void setId(Long Id);
+    Long getId();
+    void setId(Long Id);
+    Map<String, Object> getDocument();
+    void setDocument(Map<String, Object> document);
 }

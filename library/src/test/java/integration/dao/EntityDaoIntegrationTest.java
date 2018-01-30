@@ -29,7 +29,7 @@ public class EntityDaoIntegrationTest {
 
         entityDAO.save(record);
 
-        List entity = entityDAO.read(2L);
+        List entity = entityDAO.findAll(2L);
 
         Assert.assertEquals(1, entity.size());
     }
@@ -41,7 +41,7 @@ public class EntityDaoIntegrationTest {
 
         entityDAO.save(record);
         entityDAO.delete(2L);
-        List entity = entityDAO.read(2L);
+        List entity = entityDAO.findAll(2L);
 
         Assert.assertEquals(0, entity.size());
     }

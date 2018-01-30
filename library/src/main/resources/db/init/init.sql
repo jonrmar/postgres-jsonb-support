@@ -1,1 +1,1 @@
-create table entity(id bigint);
+create table entity(id bigint, document jsonb);
