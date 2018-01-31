@@ -1,7 +1,7 @@
 package unit.dao;
 
 import dao.EntityDAO;
-import domain.Record;
+import domain.Entity;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -28,21 +29,21 @@ public class EntityDAOTest {
     @Before
     public void setup() throws SQLException {
         MockitoAnnotations.initMocks(this);
-        this.entityDAO = new EntityDAO<Record>(connection);
+        this.entityDAO = new EntityDAO(connection);
         mocks();
     }
 
     @Test
     public void addAndReadOperationsTest(){
-        Record record = new Record();
-        record.setId(2L);
+        Entity entity1 = new Entity();
+        entity1.setId(2L);
 
-        entityDAO.save(record);
+        entityDAO.save(entity1);
 
-        List entity = entityDAO.findAll();
+        List<Entity> entity = entityDAO.findAll();
 
         assertEquals(entity.size(), 1);
-        assertEquals(entity, mockRecordList());
+        assertEquals(entity, mockEntityList());
     }
 
     @Test(expected = NullPointerException.class)
@@ -70,12 +71,13 @@ public class EntityDAOTest {
         when(resultSet.getLong(anyString())).thenReturn(2L);
     }
 
-    private List<Record> mockRecordList(){
-        List<Record> records = new ArrayList<>();
-        Record record = new Record();
-        record.setId(2L);
-        records.add(record);
+    private List<Entity> mockEntityList(){
+        List<Entity> entities = new ArrayList<>();
+        Entity entity = new Entity();
 
-        return records;
+        entity.setId(2L);
+        entities.add(entity);
+
+        return entities;
     }
 }

@@ -2,7 +2,6 @@ package dao;
 
 import com.google.gson.Gson;
 import domain.Entity;
-import domain.Record;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityDAO<T extends Entity> {
+public class EntityDAO {
 
     private Connection connection;
 
@@ -54,11 +53,11 @@ public class EntityDAO<T extends Entity> {
             //@TODO: Refactor: use generic
             while (rs.next()) {
                 map = (Map<String, Object>) gson.fromJson(rs.getString("document"), map.getClass());
-                Record record = new Record();
-                record.setId(rs.getLong("id"));
-                record.setDocument(map);
+                Entity entity = new Entity();
+                entity.setId(rs.getLong("id"));
+                entity.setDocument(map);
 
-                entities.add(record);
+                entities.add(entity);
             }
 
             rs.close();

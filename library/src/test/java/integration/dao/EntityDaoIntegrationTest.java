@@ -1,7 +1,7 @@
 package integration.dao;
 
 import dao.EntityDAO;
-import domain.Record;
+import domain.Entity;
 import jdbc.ConnectionFactory;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,10 +24,10 @@ public class EntityDaoIntegrationTest {
 
     @Test
     public void insertAndReadTest() {
-        Record record = new Record();
-        record.setId(2L);
+        Entity entity1 = new Entity();
+        entity1.setId(2L);
 
-        entityDAO.save(record);
+        entityDAO.save(entity1);
 
         List entity = entityDAO.findAll();
 
@@ -36,10 +36,10 @@ public class EntityDaoIntegrationTest {
 
     @Test
     public void deleteOperationTest() {
-        Record record = new Record();
-        record.setId(2L);
+        Entity entity1 = new Entity();
+        entity1.setId(2L);
 
-        entityDAO.save(record);
+        entityDAO.save(entity1);
         entityDAO.delete(2L);
         List entity = entityDAO.findAll();
 
