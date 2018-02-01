@@ -1,22 +1,13 @@
-package domain;
+package entity;
 
 import java.util.Map;
 
 public class Entity {
 
-    private Long id;
     private Map<String, Object> document;
-
-    public Long getId() {
-        return id;
-    }
 
     public Map<String, Object> getDocument() {
         return document;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setDocument(Map<String, Object> document) {
@@ -30,22 +21,18 @@ public class Entity {
 
         Entity entity = (Entity) o;
 
-        if (getId() != null ? !getId().equals(entity.getId()) : entity.getId() != null) return false;
         return getDocument() != null ? getDocument().equals(entity.getDocument()) : entity.getDocument() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getId() != null ? getId().hashCode() : 0;
-        result = 31 * result + (getDocument() != null ? getDocument().hashCode() : 0);
-        return result;
+        return getDocument() != null ? getDocument().hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "Entity{" +
-                "id=" + id +
-                ", document=" + document +
+                "document=" + document +
                 '}';
     }
 }

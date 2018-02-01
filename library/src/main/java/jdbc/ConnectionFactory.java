@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
 
-    public Connection getConnection(){
+    public Connection getConnection(String host, String user, String password ){
         try {
-            return DriverManager.getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+            return DriverManager.getConnection(host, user, password);
         } catch (SQLException e) {
             throw  new RuntimeException(e);
         }

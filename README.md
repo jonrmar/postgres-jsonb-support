@@ -11,10 +11,19 @@ Go to resource directory and run:
 ## How to use
 For examples, go to json-support-example project and run the Application class.
 
+### Filters supported for usage on where clause in update and delete operations:
+* eq : =
+* lt : <
+* gt : >
+* ge : >=
+* le : <=
+* and : and
+* or : or
+  
 ## Working and Future Progress:
 1. ~~Implement CRUD operations with mocked list~~
 2. ~~Add support to Postgres~~
 3. ~~New project with examples~~
 4. ~~Docker compose with postgres~~
-5. Support to jsonb type
+5. ~~Support to jsonb type~~
 ...
