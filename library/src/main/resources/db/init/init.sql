@@ -1,1 +1,1 @@
-create table entity(id serial primary key, document jsonb);
+create table entity(id serial primary key, document jsonb, created_at date, updated_at date);

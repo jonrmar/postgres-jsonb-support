@@ -2,6 +2,7 @@ package examples;
 
 import dao.EntityDAO;
 import entity.Entity;
+import entity.EntityFilter;
 import entity.EntityService;
 import jdbc.ConnectionFactory;
 
@@ -17,7 +18,7 @@ public class Read {
 
         EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
 
-        List<Entity> entities = entityDAO.findAll();
+        List<Entity> entities = entityDAO.findAll();//.find(EntityFilter.eq("hobby", "pc"));
 
         for (Entity entity : entities)
             System.out.println(entity);

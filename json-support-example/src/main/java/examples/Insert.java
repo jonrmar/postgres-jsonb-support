@@ -18,7 +18,7 @@ public class Insert {
         favoriteFoods.put("snack", "ice cream");
 
         //Can use any class to save into jsonb column
-        Record record = new Record("John Doe 3", "25", "movies", favoriteFoods);
+        Record record = new Record("John Doe 4", "30", "pc", favoriteFoods);
 
         //Get Database Connection
         Connection connection = new ConnectionFactory()
