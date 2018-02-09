@@ -76,7 +76,7 @@ public class EntityDAO {
 
     public List<Entity> find(String filter) {
         String sql = "select * from entity " +
-                "where document ->> " + filter;
+                "where document " + filter;
 
         List<Entity> entities = new ArrayList<>();
 
@@ -90,6 +90,10 @@ public class EntityDAO {
 
                 Entity entity = new Entity();
                 entity.setDocument(document);
+                entity.setId(rs.getLong("id"));
+                entity.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                Timestamp timestamp = rs.getTimestamp("updated_at");
+                if(timestamp != null) entity.setUpdatedAt(timestamp.toLocalDateTime());
 
                 entities.add(entity);
             }
@@ -106,7 +110,7 @@ public class EntityDAO {
     public void update(Object object, String filter) {
         String sql = "update entity " +
                 "set (document, updated_at) =  (?::JSONB,?)"+
-                "where document ->> "+filter;
+                "where document "+filter;
 
         Entity entity = objectToEntity.convert(object);
 
@@ -123,7 +127,7 @@ public class EntityDAO {
     }
 
     public void delete(String filter) {
-        String sql = "delete from entity where document ->> "+filter;
+        String sql = "delete from entity where document "+filter;
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
 

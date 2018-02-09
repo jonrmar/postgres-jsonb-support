@@ -17,13 +17,13 @@ public class Update {
         favoriteFoods.put("lunch", "fried chicken");
         favoriteFoods.put("snack", "ice cream");
 
-        Record record = new Record("John Doe 3", "30", "movies", favoriteFoods);
+        Record record = new Record("John Doe 3", "23", "movies", favoriteFoods);
 
         //Get Database Connection
         Connection connection = new ConnectionFactory()
                 .getConnection(    "jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
         EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
-        entityDAO.update(record, EntityFilter.eq("age", "25"));
+        entityDAO.update(record, EntityFilter.eq("age", "30"));
     }
 }

@@ -10,6 +10,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static entity.EntityFilter.and;
+import static entity.EntityFilter.eq;
+import static entity.EntityFilter.gt;
+
 public class Read {
     public static void main(String[] args) throws SQLException {
         //Get Database Connection
@@ -18,7 +22,7 @@ public class Read {
 
         EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
 
-        List<Entity> entities = entityDAO.findAll();//.find(EntityFilter.eq("hobby", "pc"));
+        List<Entity> entities = entityDAO.find(and(gt("age", "29"),eq("favoriteFoods.snack", "ice cream")));
 
         for (Entity entity : entities)
             System.out.println(entity);
