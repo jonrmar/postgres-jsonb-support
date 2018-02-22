@@ -27,14 +27,13 @@ public class EntityDAO {
     }
 
     public void save(Object object) {
-        String sql = "insert into entity (document, created_at) values (?::JSONB, ?::DATE)";
+        String sql = "insert into entity (document) values (?::JSONB)";
 
         Entity entity = objectToEntity.convert(object);
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setObject(1, getJsonDocument(entity));
-            stmt.setTimestamp(2, new Timestamp(new java.util.Date().getTime()));
 
             stmt.execute();
             stmt.close();
@@ -109,7 +108,7 @@ public class EntityDAO {
 
     public void update(Object object, String filter) {
         String sql = "update entity " +
-                "set (document, updated_at) =  (?::JSONB,?)"+
+                "set document =  (?::JSONB)"+
                 "where document "+filter;
 
         Entity entity = objectToEntity.convert(object);
@@ -117,7 +116,6 @@ public class EntityDAO {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setObject(1, getJsonDocument(entity));
-            stmt.setTimestamp(2, new Timestamp(new java.util.Date().getTime()));
 
             stmt.execute();
             stmt.close();

@@ -2,6 +2,7 @@ package examples;
 
 import dao.EntityDAO;
 import entity.Entity;
+import entity.EntityFilter;
 import entity.EntityService;
 import jdbc.ConnectionFactory;
 
@@ -10,7 +11,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static entity.EntityFilter.asList;
-import static entity.EntityFilter.lt;
 
 public class Read {
     public static void main(String[] args) throws SQLException {
@@ -20,7 +20,7 @@ public class Read {
 
         EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
 
-        List<Entity> entities = entityDAO.find(lt("sports", asList( "soccer")));
+        List<Entity> entities = entityDAO.find(EntityFilter.eq("sports", asList( "soccer")));
 
         for (Entity entity : entities)
             System.out.println(entity);
