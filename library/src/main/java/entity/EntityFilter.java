@@ -100,7 +100,7 @@ public class EntityFilter {
 
     private static String nestedFields(String key) {
 
-        if (!key.contains(".")) return key + "'";
+        if (!key.contains(".")) return "->> '" + key + "'";
 
         String[] fields = key.split("\\.");
         String[] fieldsMarks = new String[fields.length];
@@ -109,6 +109,6 @@ public class EntityFilter {
             fieldsMarks[i] = "'" + fields[i] + "'";
         }
 
-        return String.join(" ->> ", fieldsMarks);
+        return " -> " + String.join(" ->> ", fieldsMarks);
     }
 }
