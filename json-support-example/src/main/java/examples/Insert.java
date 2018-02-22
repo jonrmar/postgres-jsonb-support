@@ -1,6 +1,8 @@
 package examples;
 
 import dao.EntityDAO;
+import dao.exceptions.ConnectionException;
+import dao.exceptions.PSQLJsonBException;
 import entity.EntityService;
 import entity.Record;
 import jdbc.ConnectionFactory;
@@ -27,12 +29,17 @@ public class Insert {
         Record record = new Record("John Doe 4", "30", "pc", favoriteFoods, sports);
 
         //Get Database Connection
-        Connection connection = new ConnectionFactory()
-                .getConnection(    "jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+        Connection connection = null;
+        try {
+            connection = new ConnectionFactory()
+                    .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
-        EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
-        entityDAO.save(record);
+            EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
+            entityDAO.save(record);
 
-        connection.close();
+            connection.close();
+        } catch (ConnectionException | PSQLJsonBException e) {
+            e.printStackTrace();
+        }
     }
 }

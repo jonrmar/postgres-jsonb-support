@@ -1,6 +1,7 @@
 package examples;
 
 import dao.EntityDAO;
+import dao.exceptions.ConnectionException;
 import entity.EntityService;
 import entity.Record;
 import jdbc.ConnectionFactory;
@@ -30,12 +31,18 @@ public class Delete {
         Record record = new Record("John Doe 3", "25", "movies", favoriteFoods, sports);
 
         //Get Database Connection
-        Connection connection = new ConnectionFactory()
-                .getConnection(    "jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+        Connection connection = null;
+        try {
+            connection = new ConnectionFactory()
+                    .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
-        EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
-        entityDAO.delete(eq("hobby", "movies"));
+            EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
+            entityDAO.delete(eq("hobby", "movies"));
 
-        connection.close();
+            connection.close();
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+        }
+
     }
 }

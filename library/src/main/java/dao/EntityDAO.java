@@ -3,6 +3,7 @@ package dao;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
+import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
 import entity.ObjectToEntity;
 
@@ -26,7 +27,7 @@ public class EntityDAO {
         this.objectToEntity = objectToEntity;
     }
 
-    public void save(Object object) {
+    public void save(Object object) throws PSQLJsonBException {
         String sql = "insert into entity (document) values (?::JSONB)";
 
         Entity entity = objectToEntity.convert(object);
@@ -38,11 +39,11 @@ public class EntityDAO {
             stmt.execute();
             stmt.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PSQLJsonBException("ERROR - Save operation:\n "+e);
         }
     }
 
-    public List<Entity> findAll() {
+    public List<Entity> findAll() throws PSQLJsonBException {
         String sql = "select * from entity";
         List<Entity> entities = new ArrayList<>();
 
@@ -69,11 +70,11 @@ public class EntityDAO {
 
             return entities;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PSQLJsonBException("ERROR - FindAll operation:\n "+e);
         }
     }
 
-    public List<Entity> find(String filter) {
+    public List<Entity> find(String filter) throws PSQLJsonBException {
         String sql = "select * from entity " +
                 "where document " + filter;
 
@@ -102,11 +103,11 @@ public class EntityDAO {
 
             return entities;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PSQLJsonBException("ERROR - Find operation: \n"+e);
         }
     }
 
-    public void update(Object object, String filter) {
+    public void update(Object object, String filter) throws PSQLJsonBException {
         String sql = "update entity " +
                 "set document =  (?::JSONB)"+
                 "where document "+filter;
@@ -120,11 +121,11 @@ public class EntityDAO {
             stmt.execute();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new PSQLJsonBException("ERROR - Update operation:\n "+e);
         }
     }
 
-    public void delete(String filter) {
+    public void delete(String filter) throws PSQLJsonBException {
         String sql = "delete from entity where document "+filter;
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -132,12 +133,11 @@ public class EntityDAO {
             stmt.execute();
             stmt.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new PSQLJsonBException("ERROR - Delete operation:\n "+e);
         }
     }
 
     private String getJsonDocument(Entity entity) {
         return gson.toJson(entity.getDocument());
     }
-
 }
