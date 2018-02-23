@@ -29,9 +29,8 @@ public class Insert {
         Record record = new Record("John Doe 4", "30", "pc", favoriteFoods, sports);
 
         //Get Database Connection
-        Connection connection = null;
         try {
-            connection = new ConnectionFactory()
+            Connection connection = new ConnectionFactory()
                     .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();

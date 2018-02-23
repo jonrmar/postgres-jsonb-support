@@ -2,6 +2,7 @@ package examples;
 
 import dao.EntityDAO;
 import dao.exceptions.ConnectionException;
+import dao.exceptions.PSQLJsonBException;
 import entity.EntityFilter;
 import entity.EntityService;
 import entity.Record;
@@ -27,15 +28,14 @@ public class Update {
         Record record = new Record("John Doe 3", "23", "movies", favoriteFoods, sports);
 
         //Get Database Connection
-        Connection connection = null;
         try {
-            connection = new ConnectionFactory()
+            Connection connection = new ConnectionFactory()
                     .getConnection(    "jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
             entityDAO.update(record, EntityFilter.eq("age", "30"));
 
-        } catch (ConnectionException e) {
+        } catch (ConnectionException | PSQLJsonBException e) {
             e.printStackTrace();
         }
     }
