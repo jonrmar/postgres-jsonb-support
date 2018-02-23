@@ -23,7 +23,7 @@ public class Read {
 
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
 
-            List<Entity> entities = entityDAO.find(EntityFilter.eq("sports", asList("soccer")));
+            List<Entity> entities = entityDAO.findAll(); //(EntityFilter.eq("age", asList("soccer")));
 
             for (Entity entity : entities)
                 System.out.println(entity);

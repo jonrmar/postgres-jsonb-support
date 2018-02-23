@@ -3,46 +3,34 @@ package examples;
 import dao.EntityDAO;
 import dao.exceptions.ConnectionException;
 import dao.exceptions.PSQLJsonBException;
+import entity.Entity;
+import entity.EntityFilter;
 import entity.EntityService;
 import entity.Record;
 import jdbc.ConnectionFactory;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static entity.EntityFilter.eq;
-
-public class Delete {
-
-    public static void main(String[] args) throws SQLException {
-        Map<String, String> favoriteFoods = new HashMap<>();
-        favoriteFoods.put("desert", "banana");
-        favoriteFoods.put("lunch", "fried chicken");
-        favoriteFoods.put("snack", "ice cream");
-
-        List<String> sports = new ArrayList<>();
-        sports.add("swim");
-        sports.add("soccer");
-
-        //Can use any class to save into jsonb column
-        Record record = new Record("John Doe 3", "25", "movies", favoriteFoods, sports);
-
+public class NativeQuery {
+    public static void main(String[] args) {
         //Get Database Connection
         try {
             Connection connection = new ConnectionFactory()
                     .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
+            String query = "delete from entity where document ->> 'age' = '30'";
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
-            entityDAO.delete(eq("hobby", "pc"));
+            List<Entity> entities = entityDAO.nativeQuery(query);
 
-            connection.close();
+            for (Entity entity : entities)
+                System.out.println(entity);
+
         } catch (ConnectionException | PSQLJsonBException e) {
             e.printStackTrace();
         }
-
     }
 }

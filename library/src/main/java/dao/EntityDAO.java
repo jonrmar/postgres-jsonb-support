@@ -1,7 +1,6 @@
 package dao;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
@@ -9,14 +8,13 @@ import entity.ObjectToEntity;
 
 import java.lang.reflect.Type;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class EntityDAO {
 
+    public static final String SELECT = "select";
     private Connection connection;
     private Gson gson;
     private ObjectToEntity objectToEntity;
@@ -134,6 +132,41 @@ public class EntityDAO {
             stmt.close();
         } catch (SQLException e) {
             throw new PSQLJsonBException("ERROR - Delete operation:\n "+e);
+        }
+    }
+
+    public List<Entity> nativeQuery(String query) throws PSQLJsonBException {
+        List<Entity> entities = new ArrayList<>();
+
+        query = query.toLowerCase();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            if (query.startsWith(SELECT)) {
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    Type map = new TypeToken<Map<String, Object>>() {
+                    }.getType();
+                    Map<String, Object> document = gson.fromJson(rs.getString("document"), map);
+
+                    Entity entity = new Entity();
+                    entity.setDocument(document);
+                    entity.setId(rs.getLong("id"));
+                    entity.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                    Timestamp timestamp = rs.getTimestamp("updated_at");
+                    if (timestamp != null) entity.setUpdatedAt(timestamp.toLocalDateTime());
+
+                    entities.add(entity);
+                }
+            }else
+                stmt.execute();
+
+            stmt.close();
+
+            return entities;
+        } catch (SQLException e) {
+            throw new PSQLJsonBException("ERROR - Native Query operation: " + query + " \n " + e);
         }
     }
 
