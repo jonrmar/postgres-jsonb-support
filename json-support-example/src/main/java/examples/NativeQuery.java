@@ -4,16 +4,11 @@ import dao.EntityDAO;
 import dao.exceptions.ConnectionException;
 import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
-import entity.EntityFilter;
 import entity.EntityService;
-import entity.Record;
 import jdbc.ConnectionFactory;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class NativeQuery {
     public static void main(String[] args) {
@@ -29,7 +24,7 @@ public class NativeQuery {
             for (Entity entity : entities)
                 System.out.println(entity);
 
-        } catch (ConnectionException | PSQLJsonBException e) {
+        } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

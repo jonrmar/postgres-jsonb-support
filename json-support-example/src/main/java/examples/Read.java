@@ -4,7 +4,6 @@ import dao.EntityDAO;
 import dao.exceptions.ConnectionException;
 import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
-import entity.EntityFilter;
 import entity.EntityService;
 import jdbc.ConnectionFactory;
 
@@ -12,10 +11,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static entity.EntityFilter.asList;
-
 public class Read {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, PSQLJsonBException {
         //Get Database Connection
         try {
             Connection connection = new ConnectionFactory()

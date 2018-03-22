@@ -5,7 +5,7 @@ import dao.exceptions.ConnectionException;
 import dao.exceptions.PSQLJsonBException;
 import entity.EntityFilter;
 import entity.EntityService;
-import entity.Record;
+import document.Record;
 import jdbc.ConnectionFactory;
 
 import java.sql.Connection;
@@ -35,7 +35,7 @@ public class Update {
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
             entityDAO.update(record, EntityFilter.eq("age", "30"));
 
-        } catch (ConnectionException | PSQLJsonBException e) {
+        } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

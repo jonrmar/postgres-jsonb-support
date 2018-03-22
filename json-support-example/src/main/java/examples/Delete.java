@@ -4,7 +4,7 @@ import dao.EntityDAO;
 import dao.exceptions.ConnectionException;
 import dao.exceptions.PSQLJsonBException;
 import entity.EntityService;
-import entity.Record;
+import document.Record;
 import jdbc.ConnectionFactory;
 
 import java.sql.Connection;
@@ -40,7 +40,7 @@ public class Delete {
             entityDAO.delete(eq("hobby", "pc"));
 
             connection.close();
-        } catch (ConnectionException | PSQLJsonBException e) {
+        } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 

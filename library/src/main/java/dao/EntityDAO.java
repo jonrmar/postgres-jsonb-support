@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class EntityDAO {
 
-    public static final String SELECT = "select";
+    private static final String SELECT = "select";
     private Connection connection;
     private Gson gson;
     private ObjectToEntity objectToEntity;
@@ -169,6 +169,60 @@ public class EntityDAO {
             throw new PSQLJsonBException("ERROR - Native Query operation: " + query + " \n " + e);
         }
     }
+
+    public void exportTable(String tableName) throws PSQLJsonBException {
+        String query = String.format("create table IF NOT EXISTS %s (" +
+                " id serial NOT NULL PRIMARY KEY," +
+                " document JSONB NOT NULL," +
+                " created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()," +
+                " updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()" +
+                ");", tableName);
+
+        try {
+            PreparedStatement  stmt = connection.prepareStatement(query);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new PSQLJsonBException("ERROR - Creating table: " + query + " \n " + e);
+        }finally {
+            createFunctionUpdateAt();
+            createTrigger(tableName);
+        }
+
+    }
+
+    private void createTrigger(String tableName) throws PSQLJsonBException {
+        String query = String.format("CREATE TRIGGER set_timestamp" +
+                " BEFORE UPDATE ON %s" +
+                " FOR EACH ROW" +
+                " EXECUTE PROCEDURE trigger_set_timestamp();", tableName);
+
+        try {
+            PreparedStatement  stmt = connection.prepareStatement(query);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new PSQLJsonBException("ERROR - Creating trigger for timestamp: " + query + " \n " + e);
+        }
+    }
+
+    private void createFunctionUpdateAt() throws PSQLJsonBException {
+        String query = "CREATE OR REPLACE FUNCTION trigger_set_timestamp()" +
+                " RETURNS TRIGGER AS $$" +
+                " BEGIN" +
+                "  NEW.updated_at = NOW();" +
+                "  RETURN NEW;" +
+                " END;" +
+                " $$ LANGUAGE plpgsql;";
+        try {
+            PreparedStatement  stmt = connection.prepareStatement(query);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new PSQLJsonBException("ERROR - Creating function for updating updated_at column: " + query + " \n " + e);
+        }
+    }
+
 
     private String getJsonDocument(Entity entity) {
         return gson.toJson(entity.getDocument());
