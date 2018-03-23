@@ -186,6 +186,7 @@ public class EntityDAO {
             throw new PSQLJsonBException("ERROR - Creating table: " + query + " \n " + e);
         }finally {
             createFunctionUpdateAt();
+            dropTrigger(tableName);
             createTrigger(tableName);
         }
 
@@ -203,6 +204,18 @@ public class EntityDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new PSQLJsonBException("ERROR - Creating trigger for timestamp: " + query + " \n " + e);
+        }
+    }
+
+    private void dropTrigger(String tableName) throws PSQLJsonBException {
+        String query = String.format("DROP TRIGGER IF EXISTS set_timestamp on %s;", tableName);
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new PSQLJsonBException("ERROR - Droping trigger for timestamp: " + query + " \n " + e);
         }
     }
 

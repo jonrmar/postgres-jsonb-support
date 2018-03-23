@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Read {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, PSQLJsonBException {
+    public static void main(String[] args) throws ClassNotFoundException {
         //Get Database Connection
         try {
             Connection connection = new ConnectionFactory()
@@ -26,7 +26,7 @@ public class Read {
                 System.out.println(entity);
 
             connection.close();
-        } catch (ConnectionException | PSQLJsonBException e) {
+        } catch (ConnectionException | PSQLJsonBException | SQLException e) {
             e.printStackTrace();
         }
     }
