@@ -3,13 +3,16 @@ package examples;
 import dao.EntityDAO;
 import dao.exceptions.ConnectionException;
 import dao.exceptions.PSQLJsonBException;
-import entity.Entity;
+import document.Record;
+import entity.EntityFilter;
 import entity.EntityService;
 import jdbc.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
+import static entity.EntityFilter.asList;
 
 public class Read {
     public static void main(String[] args) throws ClassNotFoundException {
@@ -20,10 +23,10 @@ public class Read {
 
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
 
-            List<Entity> entities = entityDAO.findAll(); //(EntityFilter.eq("age", asList("soccer")));
+            List<Record> records = entityDAO.find(EntityFilter.gt("age", "28"), Record.class);
 
-            for (Entity entity : entities)
-                System.out.println(entity);
+            for (Record record : records)
+                System.out.println(record);
 
             connection.close();
         } catch (ConnectionException | PSQLJsonBException | SQLException e) {

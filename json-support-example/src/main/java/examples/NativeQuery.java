@@ -3,6 +3,7 @@ package examples;
 import dao.EntityDAO;
 import dao.exceptions.ConnectionException;
 import dao.exceptions.PSQLJsonBException;
+import document.Record;
 import entity.Entity;
 import entity.EntityService;
 import jdbc.ConnectionFactory;
@@ -19,10 +20,10 @@ public class NativeQuery {
 
             String query = "delete from entity where document ->> 'age' = '30'";
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
-            List<Entity> entities = entityDAO.nativeQuery(query);
+            List<Record> records = entityDAO.nativeQuery(query, Record.class);
 
-            for (Entity entity : entities)
-                System.out.println(entity);
+            for (Record record : records)
+                System.out.println(record);
 
         } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
             e.printStackTrace();

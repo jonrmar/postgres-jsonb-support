@@ -17,11 +17,27 @@ public class Record {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public Record(){}
+
     public Record(String name, String age, String hobby, Map<String, String> favoriteFoods, List<String> sports) {
         this.name = name;
         this.age = age;
         this.hobby = hobby;
         this.favoriteFoods = favoriteFoods;
         this.sports = sports;
+    }
+
+    @Override
+    public String toString() {
+        return "Record{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", hobby='" + hobby + '\'' +
+                ", favoriteFoods=" + favoriteFoods +
+                ", sports=" + sports +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
