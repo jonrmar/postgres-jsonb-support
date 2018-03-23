@@ -4,29 +4,39 @@ This project has the objective to supply an easiest way to map plain Java Object
 
 ## DockerFile
 
-Go to resource directory and run:
+For development purpos, use an postgres docker image. Go to resource directory and run:
 
 `docker-compose up`
 
 ## Getting Started:
 
-1. Create a table with following columns:
+1. Create a POJO that you want to seriazile os document with at least the followings fields:
 
-`id serial primary key, document jsonb, created_at date, updated_at date`
+`Long id
+LocalDateTime createdAt
+LocalDateTime updatedAt`
 
-2. Get database connection:
+2. Make a default empty constructor in the POJO
+
+3. Add an annotation @Entity. When initializing the application, the Component Scan will take place and create the respective 
+table with the class name and add fields as jsonb document on database except for the default fields (id, createdAt and updatedAt).
+The default fields (id, createdAt and updatedAt) are used for managment purpose of the table.
+ 
+4. Get database connection:
 
 `Connection connection = new ConnectionFactory().getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");`
 
-3. Use operations below.
+5. Use operations below.
 
 ## Supported database operations:
 
 1. Insert: `entityDAO.save(Object);`
-2. Find All: `entityDAO.findAll();`
-3. Find: `entityDAO.find( filters... );`
+2. Find All: `entityDAO.findAll(Class);`
+3. Find: `entityDAO.find( filters..., Class );`
 4. Update `entityDAO.update(Object, filters... )`
-5. Delete `entityDAO.delete( filters... )`
+5. Delete `entityDAO.delete( filters..., Class)`
+6. Select Native Query: `entityDAO.selectNativeQuery(query, Class)`
+6. Native Query: `entityDAO.selectNativeQuery(query)`
 
 ### Filters supported:
 * eq : =
@@ -68,11 +78,3 @@ Native query:
 
 ### Code Examples
 For more examples, go to json-support-example project and run the Application class.
-  
-## Working and Future Progress:
-1. ~~Implement CRUD operations with mocked list~~
-2. ~~Add support to Postgres~~
-3. ~~New project with examples~~
-4. ~~Docker compose with postgres~~
-5. ~~Support to jsonb type~~
-...

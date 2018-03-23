@@ -6,7 +6,6 @@ import dao.annotations.Entity;
 import dao.exceptions.PSQLJsonBException;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +39,6 @@ public class EntityService {
                 String tableName = clazzName.substring(clazzName.lastIndexOf(".")+1, clazzName.length());
 
                 entityDAO.exportTable(tableName);
-
-                findFields(clazz);
             }
         }
     }
@@ -53,12 +50,6 @@ public class EntityService {
         Integer indexOfClasses = normalizedPackage.indexOf("classes");
 
         return normalizedPackage.substring(indexOfClasses+ CLASSES_SIZE, normalizedPackage.length());
-    }
-
-    private void findFields(Class clazz){
-        for(Field field : clazz.getDeclaredFields()){
-            System.out.println(field.getName());
-        }
     }
 
     private static List<File> getFiles(String paths) {

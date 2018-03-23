@@ -18,12 +18,18 @@ public class NativeQuery {
             Connection connection = new ConnectionFactory()
                     .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
-            String query = "delete from entity where document ->> 'age' = '30'";
+            // Native Query for Select
+            String query = "select * from record where document ->> 'age' = '23'";
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
-            List<Record> records = entityDAO.nativeQuery(query, Record.class);
+            List<Record> records = entityDAO.selectNativeQuery(query, Record.class);
 
             for (Record record : records)
                 System.out.println(record);
+
+            //Native query for others crud operations
+            query = "delete from record where document ->> 'age' = '23'";
+            entityDAO.nativeQuery(query);
+
 
         } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
             e.printStackTrace();
