@@ -2,6 +2,8 @@ package integration.dao;
 
 import com.google.gson.Gson;
 import dao.EntityDAO;
+import dao.exceptions.ConnectionException;
+import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
 import entity.EntityFilter;
 import entity.ObjectToEntity;
@@ -21,26 +23,26 @@ public class EntityDaoIntegrationTest {
     private EntityDAO entityDAO;
 
     @Before
-    public void setUp() throws SQLException {
+    public void setUp() throws SQLException, ConnectionException {
         Connection connection = new ConnectionFactory().getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
         connection.setAutoCommit(false);
         Gson gson = new Gson();
-        this.entityDAO = new EntityDAO(connection, gson, new ObjectToEntity(gson));
+        this.entityDAO = new EntityDAO(connection, gson);
     }
 
     @Test
-    public void insertAndReadTest() {
+    public void insertAndReadTest() throws PSQLJsonBException {
         Entity entity1 = new Entity();
 
         entityDAO.save(entity1);
 
-        List entity = entityDAO.findAll();
+        List entity = entityDAO.findAll(Entity.class);
 
         Assert.assertEquals(1, entity.size());
     }
 
     @Test(expected = NullPointerException.class)
-    public void insertNullTest(){
+    public void insertNullTest() throws PSQLJsonBException {
         entityDAO.save(null);
     }
 

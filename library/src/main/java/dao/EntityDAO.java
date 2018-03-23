@@ -8,7 +8,10 @@ import entity.Entity;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,19 +63,21 @@ public class EntityDAO {
                 T entity = clazz.getConstructor().newInstance();
                 for (Field field : clazz.getDeclaredFields()) {
                     field.setAccessible(true);
-                    switch (field.getName()) {
-                        case "id":
-                            field.set(entity, rs.getLong("id"));
-                            break;
-                        case "createdAt":
-                            field.set(entity, rs.getTimestamp("created_at").toLocalDateTime());
-                            break;
-                        case "updatedAt":
-                            field.set(entity, rs.getTimestamp("updated_at").toLocalDateTime());
-                            break;
-                        default:
-                            field.set(entity, document.get(field.getName()));
-                            break;
+                    if (document != null) {
+                        switch (field.getName()) {
+                            case "id":
+                                field.set(entity, rs.getLong("id"));
+                                break;
+                            case "createdAt":
+                                field.set(entity, rs.getTimestamp("created_at").toLocalDateTime());
+                                break;
+                            case "updatedAt":
+                                field.set(entity, rs.getTimestamp("updated_at").toLocalDateTime());
+                                break;
+                            default:
+                                field.set(entity, document.get(field.getName()));
+                                break;
+                        }
                     }
                 }
                 entities.add(entity);

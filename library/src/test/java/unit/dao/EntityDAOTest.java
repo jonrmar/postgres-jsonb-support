@@ -2,6 +2,7 @@ package unit.dao;
 
 import com.google.gson.Gson;
 import dao.EntityDAO;
+import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
 import entity.ObjectToEntity;
 import org.junit.Before;
@@ -29,45 +30,40 @@ public class EntityDAOTest {
     @Mock private Connection connection;
     @Mock private PreparedStatement statement;
     @Mock private ResultSet resultSet;
-    @Mock
-    private ObjectToEntity objectToEntity;
 
     @Before
     public void setup() throws SQLException {
         MockitoAnnotations.initMocks(this);
         Gson gson = new Gson();
-        this.entityDAO = new EntityDAO(connection, gson, objectToEntity);
+        this.entityDAO = new EntityDAO(connection, gson);
         mocks();
     }
 
     @Test
-    public void addAndReadOperationsTest(){
+    public void addAndReadOperationsTest() throws PSQLJsonBException {
         entityDAO.save(mockEntity());
 
-        List<Entity> entity = entityDAO.findAll();
+        List<Entity> entity = entityDAO.findAll(Entity.class);
 
         assertEquals(entity.size(), 1);
         assertEquals(entity, mockEntityList());
     }
 
     @Test(expected = NullPointerException.class)
-    public void addNullObjectTest(){
-        when(objectToEntity.convert(anyObject())).thenReturn(null);
-
+    public void addNullObjectTest() throws PSQLJsonBException {
         entityDAO.save(null);
     }
 
     @Test
-    public void readEmptyDBTest() throws SQLException {
+    public void readEmptyDBTest() throws SQLException, PSQLJsonBException {
         when(resultSet.next()).thenReturn(false);
-        List entity = entityDAO.findAll();
+        List entity = entityDAO.findAll(Entity.class);
 
         assertEquals(entity.size(), 0);
     }
 
     @Test(expected = NullPointerException.class)
-    public void updateOperationTest(){
-        when(objectToEntity.convert(anyObject())).thenReturn(null);
+    public void updateOperationTest() throws PSQLJsonBException {
         entityDAO.update(null, "");
     }
 
@@ -76,7 +72,6 @@ public class EntityDAOTest {
         when(statement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true).thenReturn(false);
         when(resultSet.getLong(anyString())).thenReturn(2L);
-        when(objectToEntity.convert(anyObject())).thenReturn(mockEntity());
     }
 
     private List<Entity> mockEntityList(){
