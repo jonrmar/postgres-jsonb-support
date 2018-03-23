@@ -19,8 +19,7 @@ public class EntityService {
 
     public EntityService(Connection connection) throws PSQLJsonBException, ClassNotFoundException {
         Gson gson = new Gson();
-        ObjectToEntity objectToEntity = new ObjectToEntity(gson);
-        this.entityDAO = new EntityDAO(connection, gson, objectToEntity);
+        this.entityDAO = new EntityDAO(connection, gson);
         listFiles();
     }
 

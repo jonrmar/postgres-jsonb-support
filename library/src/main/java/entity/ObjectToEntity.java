@@ -1,32 +1,25 @@
 package entity;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ObjectToEntity {
 
-    private Gson gson;
+    public static Entity convert(Object object){
+        Map<String, Object> document = new HashMap<>();
 
-    public ObjectToEntity(Gson gson) {
-        this.gson = gson;
-    }
-
-    public Entity convert(Object object){
-        Type map = new TypeToken<Map<String, Object>>() {}.getType();
-
-        String json = gson.toJson(object);
-        Map<String, Object> document = gson.fromJson(json, map);
-
+        for (Field field : object.getClass().getDeclaredFields()) {
+            String fieldName = field.getName();
+            if (!fieldName.equals("id") && !fieldName.equals("createdAt") && !fieldName.equals("updatedAt")) {
+                try {
+                    field.setAccessible(true);
+                    document.put(fieldName, field.get(object));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         Entity entity = new Entity();
         entity.setDocument(document);
 

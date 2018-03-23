@@ -4,31 +4,33 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
-import entity.ObjectToEntity;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static entity.ObjectToEntity.convert;
+
 public class EntityDAO {
 
     private static final String SELECT = "select";
     private Connection connection;
     private Gson gson;
-    private ObjectToEntity objectToEntity;
 
-    public EntityDAO(Connection connection,  Gson gson, ObjectToEntity objectToEntity) {
+    public EntityDAO(Connection connection, Gson gson) {
         this.connection = connection;
         this.gson = gson;
-        this.objectToEntity = objectToEntity;
     }
 
     public void save(Object object) throws PSQLJsonBException {
-        String sql = "insert into entity (document) values (?::JSONB)";
+        String tableName = getTableName(object.getClass());
+        String sql = String.format("insert into %s (document) values (?::JSONB)", tableName);
 
-        Entity entity = objectToEntity.convert(object);
+        Entity entity = convert(object);
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -41,9 +43,11 @@ public class EntityDAO {
         }
     }
 
-    public List<Entity> findAll() throws PSQLJsonBException {
-        String sql = "select * from entity";
-        List<Entity> entities = new ArrayList<>();
+    public <T> List<T> findAll(Class<T> clazz) throws PSQLJsonBException {
+        String tableName = getTableName(clazz);
+        String sql = String.format("select * from %s", tableName);
+
+        List<T> entities = new ArrayList<>();
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -53,13 +57,24 @@ public class EntityDAO {
                 Type map = new TypeToken<Map<String, Object>>() {}.getType();
                 Map<String, Object> document = gson.fromJson(rs.getString("document"), map);
 
-                Entity entity = new Entity();
-                entity.setDocument(document);
-                entity.setId(rs.getLong("id"));
-                entity.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                Timestamp timestamp = rs.getTimestamp("updated_at");
-                if(timestamp != null) entity.setUpdatedAt(timestamp.toLocalDateTime());
-
+                T entity = clazz.getConstructor().newInstance();
+                for (Field field : clazz.getDeclaredFields()) {
+                    field.setAccessible(true);
+                    switch (field.getName()) {
+                        case "id":
+                            field.set(entity, rs.getLong("id"));
+                            break;
+                        case "createdAt":
+                            field.set(entity, rs.getTimestamp("created_at").toLocalDateTime());
+                            break;
+                        case "updatedAt":
+                            field.set(entity, rs.getTimestamp("updated_at").toLocalDateTime());
+                            break;
+                        default:
+                            field.set(entity, document.get(field.getName()));
+                            break;
+                    }
+                }
                 entities.add(entity);
             }
 
@@ -67,16 +82,21 @@ public class EntityDAO {
             stmt.close();
 
             return entities;
-        } catch (SQLException e) {
+        } catch (SQLException |
+                IllegalAccessException |
+                InstantiationException |
+                InvocationTargetException |
+                NoSuchMethodException e) {
             throw new PSQLJsonBException("ERROR - FindAll operation:\n "+e);
         }
     }
 
-    public List<Entity> find(String filter) throws PSQLJsonBException {
-        String sql = "select * from entity " +
-                "where document " + filter;
+    public <T> List<T> find(String filter, Class<T> clazz) throws PSQLJsonBException {
+        String tableName = getTableName(clazz);
+        String sql = String.format("select * from %s " +
+                "where document %s", tableName, filter);
 
-        List<Entity> entities = new ArrayList<>();
+        List<T> entities = new ArrayList<>();
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -86,13 +106,24 @@ public class EntityDAO {
                 Type map = new TypeToken<Map<String, Object>>(){}.getType();
                 Map<String, Object> document = gson.fromJson(rs.getString("document"), map);
 
-                Entity entity = new Entity();
-                entity.setDocument(document);
-                entity.setId(rs.getLong("id"));
-                entity.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                Timestamp timestamp = rs.getTimestamp("updated_at");
-                if(timestamp != null) entity.setUpdatedAt(timestamp.toLocalDateTime());
-
+                T entity = clazz.getConstructor().newInstance();
+                for (Field field : clazz.getDeclaredFields()) {
+                    field.setAccessible(true);
+                    switch (field.getName()) {
+                        case "id":
+                            field.set(entity, rs.getLong("id"));
+                            break;
+                        case "createdAt":
+                            field.set(entity, rs.getTimestamp("created_at").toLocalDateTime());
+                            break;
+                        case "updatedAt":
+                            field.set(entity, rs.getTimestamp("updated_at").toLocalDateTime());
+                            break;
+                        default:
+                            field.set(entity, document.get(field.getName()));
+                            break;
+                    }
+                }
                 entities.add(entity);
             }
 
@@ -100,17 +131,22 @@ public class EntityDAO {
             stmt.close();
 
             return entities;
-        } catch (SQLException e) {
+        } catch (SQLException |
+                IllegalAccessException |
+                InstantiationException |
+                NoSuchMethodException |
+                InvocationTargetException e) {
             throw new PSQLJsonBException("ERROR - Find operation: \n"+e);
         }
     }
 
     public void update(Object object, String filter) throws PSQLJsonBException {
-        String sql = "update entity " +
+        String tableName = getTableName(object.getClass());
+        String sql = String.format("update %s " +
                 "set document =  (?::JSONB)"+
-                "where document "+filter;
+                "where document %s", tableName, filter);
 
-        Entity entity = objectToEntity.convert(object);
+        Entity entity = convert(object);
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -123,8 +159,10 @@ public class EntityDAO {
         }
     }
 
-    public void delete(String filter) throws PSQLJsonBException {
-        String sql = "delete from entity where document "+filter;
+    public void delete(String filter, Class clazz) throws PSQLJsonBException {
+        String tableName = getTableName(clazz);
+        String sql = String.format("delete from %s where document %s", tableName, filter);
+
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
 
@@ -135,8 +173,8 @@ public class EntityDAO {
         }
     }
 
-    public List<Entity> nativeQuery(String query) throws PSQLJsonBException {
-        List<Entity> entities = new ArrayList<>();
+    public <T> List<T> nativeQuery(String query, Class<T> clazz) throws PSQLJsonBException {
+        List<T> entities = new ArrayList<>();
 
         query = query.toLowerCase();
         try {
@@ -150,13 +188,24 @@ public class EntityDAO {
                     }.getType();
                     Map<String, Object> document = gson.fromJson(rs.getString("document"), map);
 
-                    Entity entity = new Entity();
-                    entity.setDocument(document);
-                    entity.setId(rs.getLong("id"));
-                    entity.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                    Timestamp timestamp = rs.getTimestamp("updated_at");
-                    if (timestamp != null) entity.setUpdatedAt(timestamp.toLocalDateTime());
-
+                    T entity = clazz.getConstructor().newInstance();
+                    for (Field field : clazz.getDeclaredFields()) {
+                        field.setAccessible(true);
+                        switch (field.getName()) {
+                            case "id":
+                                field.set(entity, rs.getLong("id"));
+                                break;
+                            case "createdAt":
+                                field.set(entity, rs.getTimestamp("created_at").toLocalDateTime());
+                                break;
+                            case "updatedAt":
+                                field.set(entity, rs.getTimestamp("updated_at").toLocalDateTime());
+                                break;
+                            default:
+                                field.set(entity, document.get(field.getName()));
+                                break;
+                        }
+                    }
                     entities.add(entity);
                 }
             }else
@@ -165,7 +214,11 @@ public class EntityDAO {
             stmt.close();
 
             return entities;
-        } catch (SQLException e) {
+        } catch (SQLException |
+                InvocationTargetException |
+                NoSuchMethodException |
+                InstantiationException |
+                IllegalAccessException e) {
             throw new PSQLJsonBException("ERROR - Native Query operation: " + query + " \n " + e);
         }
     }
@@ -239,5 +292,10 @@ public class EntityDAO {
 
     private String getJsonDocument(Entity entity) {
         return gson.toJson(entity.getDocument());
+    }
+
+    private <T> String getTableName(Class<T> clazz) {
+        String clazzName = clazz.getName();
+        return clazzName.substring(clazzName.lastIndexOf(".") + 1, clazzName.length());
     }
 }
