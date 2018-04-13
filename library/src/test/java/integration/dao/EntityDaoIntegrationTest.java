@@ -30,15 +30,11 @@ public class EntityDaoIntegrationTest {
         this.entityDAO = new EntityDAO(connection, gson);
     }
 
-    @Test
-    public void insertAndReadTest() throws PSQLJsonBException {
+    @Test(expected = PSQLJsonBException.class)
+    public void insertTest() throws PSQLJsonBException {
         Entity entity1 = new Entity();
 
         entityDAO.save(entity1);
-
-        List entity = entityDAO.findAll(Entity.class);
-
-        Assert.assertEquals(1, entity.size());
     }
 
     @Test(expected = NullPointerException.class)

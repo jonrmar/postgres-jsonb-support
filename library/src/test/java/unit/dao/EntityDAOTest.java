@@ -55,12 +55,10 @@ public class EntityDAOTest {
         entityDAO.save(null);
     }
 
-    @Test
+    @Test(expected = PSQLJsonBException.class)
     public void readEmptyDBTest() throws SQLException, PSQLJsonBException {
         when(resultSet.next()).thenReturn(false);
-        List entity = entityDAO.findAll(Entity.class);
-
-        assertEquals(entity.size(), 0);
+        entityDAO.findAll(Entity.class);
     }
 
     @Test(expected = NullPointerException.class)
