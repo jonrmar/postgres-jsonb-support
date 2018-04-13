@@ -1,4 +1,4 @@
-package dao.exceptions;
+package dao;
 
 public class PSQLJsonBException extends Exception {
     public PSQLJsonBException(String message){

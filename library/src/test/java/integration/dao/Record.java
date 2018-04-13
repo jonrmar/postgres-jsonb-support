@@ -1,4 +1,4 @@
-package document;
+package integration.dao;
 
 import entity.annotations.Entity;
 
@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Entity(schema = "example")
-public class Record {
+@Entity()
+public class Record{
     private Long id;
     private String name;
     private String age;
@@ -19,7 +19,7 @@ public class Record {
 
     public Record(){}
 
-    public Record(String name, String age, String hobby, Map<String, String> favoriteFoods, List<String> sports) {
+    Record(String name, String age, String hobby, Map<String, String> favoriteFoods, List<String> sports) {
         this.name = name;
         this.age = age;
         this.hobby = hobby;

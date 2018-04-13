@@ -1,4 +1,4 @@
-package dao.exceptions;
+package jdbc;
 
 public class ConnectionException extends Exception {
 

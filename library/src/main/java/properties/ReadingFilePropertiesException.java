@@ -1,4 +1,4 @@
-package dao.exceptions;
+package properties;
 
 import java.io.IOException;
 

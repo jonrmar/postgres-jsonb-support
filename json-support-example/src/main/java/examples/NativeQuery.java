@@ -1,10 +1,9 @@
 package examples;
 
 import dao.EntityDAO;
-import dao.exceptions.ConnectionException;
-import dao.exceptions.PSQLJsonBException;
+import jdbc.ConnectionException;
+import dao.PSQLJsonBException;
 import document.Record;
-import entity.Entity;
 import entity.EntityService;
 import jdbc.ConnectionFactory;
 
@@ -19,7 +18,7 @@ public class NativeQuery {
                     .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
 
             // Native Query for Select
-            String query = "select * from record where document ->> 'age' = '23'";
+            String query = "select * from record";
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
             List<Record> records = entityDAO.selectNativeQuery(query, Record.class);
 

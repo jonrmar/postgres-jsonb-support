@@ -2,9 +2,8 @@ package unit.dao;
 
 import com.google.gson.Gson;
 import dao.EntityDAO;
-import dao.exceptions.PSQLJsonBException;
+import dao.PSQLJsonBException;
 import entity.Entity;
-import entity.ObjectToEntity;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 

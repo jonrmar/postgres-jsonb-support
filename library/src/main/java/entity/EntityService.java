@@ -2,8 +2,8 @@ package entity;
 
 import com.google.gson.Gson;
 import dao.EntityDAO;
-import dao.annotations.Entity;
-import dao.exceptions.PSQLJsonBException;
+import entity.annotations.Entity;
+import dao.PSQLJsonBException;
 
 import java.io.File;
 import java.sql.Connection;

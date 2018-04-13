@@ -1,8 +1,8 @@
 package examples;
 
 import dao.EntityDAO;
-import dao.exceptions.ConnectionException;
-import dao.exceptions.PSQLJsonBException;
+import jdbc.ConnectionException;
+import dao.PSQLJsonBException;
 import entity.EntityService;
 import document.Record;
 import jdbc.ConnectionFactory;

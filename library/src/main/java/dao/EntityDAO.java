@@ -2,7 +2,6 @@ package dao;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import dao.exceptions.PSQLJsonBException;
 import entity.Entity;
 
 import java.lang.reflect.Field;
@@ -275,12 +274,12 @@ public class EntityDAO {
     private <T> String getTableName(Class<T> clazz) throws PSQLJsonBException {
         String clazzName = clazz.getName();
 
-        if(!clazz.isAnnotationPresent(dao.annotations.Entity.class))
-            throw new PSQLJsonBException(String.format("ERROR - Class %s not annotated with $s", clazzName, dao.annotations.Entity.class.getName()));
+        if(!clazz.isAnnotationPresent(entity.annotations.Entity.class))
+            throw new PSQLJsonBException(String.format("ERROR - Class %s not annotated with $s", clazzName, entity.annotations.Entity.class.getName()));
 
         String tableName = clazzName.substring(clazzName.lastIndexOf(".") + 1, clazzName.length());
 
-        dao.annotations.Entity entity = clazz.getAnnotation(dao.annotations.Entity.class);
+        entity.annotations.Entity entity = clazz.getAnnotation(entity.annotations.Entity.class);
         String schema = entity.schema();
 
         return !schema.equals("") ? schema + "." + tableName : tableName;

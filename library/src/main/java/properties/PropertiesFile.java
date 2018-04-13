@@ -1,6 +1,4 @@
-package dao.properties;
-
-import dao.exceptions.ReadingFilePropertiesException;
+package properties;
 
 import java.io.IOException;
 import java.io.InputStream;

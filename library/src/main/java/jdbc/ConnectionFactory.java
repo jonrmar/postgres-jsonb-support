@@ -1,7 +1,5 @@
 package jdbc;
 
-import dao.exceptions.ConnectionException;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
