@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Entity
+@Entity(schema = "example")
 public class Record {
     private Long id;
     private String name;

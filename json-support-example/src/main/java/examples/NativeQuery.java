@@ -27,7 +27,7 @@ public class NativeQuery {
                 System.out.println(record);
 
             //Native query for others crud operations
-            query = "delete from record where document ->> 'age' = '23'";
+            query = "delete from example.record where document ->> 'age' = '23'";
             entityDAO.nativeQuery(query);
 
 

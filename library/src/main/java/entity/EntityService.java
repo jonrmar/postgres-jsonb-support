@@ -13,6 +13,7 @@ import java.util.List;
 public class EntityService {
 
     private static final int CLASSES_SIZE = 8;
+    public static final String EMPTY_SCHEMA = "";
     private EntityDAO entityDAO;
 
 
@@ -34,11 +35,18 @@ public class EntityService {
             ClassLoader classLoader = ClassLoader.getSystemClassLoader();
             Class clazz = classLoader.loadClass(fileName);
 
-            if(clazz.getAnnotation(Entity.class) != null){
+            if (clazz.isAnnotationPresent(Entity.class)) {
                 String clazzName = clazz.getName();
                 String tableName = clazzName.substring(clazzName.lastIndexOf(".")+1, clazzName.length());
 
-                entityDAO.exportTable(tableName);
+                Entity annotation = (Entity) clazz.getAnnotation(Entity.class);
+
+                if (!annotation.schema().equals(EMPTY_SCHEMA)) {
+                    String schema = annotation.schema();
+                    entityDAO.createSchema(schema);
+                    entityDAO.exportTable(schema+"."+tableName);
+                } else
+                    entityDAO.exportTable(tableName);
             }
         }
     }

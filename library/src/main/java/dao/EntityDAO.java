@@ -20,7 +20,6 @@ import static entity.ObjectToEntity.convert;
 
 public class EntityDAO {
 
-    private static final String SELECT = "select";
     private Connection connection;
     private Gson gson;
 
@@ -212,6 +211,18 @@ public class EntityDAO {
 
     }
 
+    public void createSchema(String schema) throws PSQLJsonBException {
+        String query = String.format("CREATE SCHEMA IF NOT EXISTS %s", schema);
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new PSQLJsonBException("ERROR - Creating schema: " + schema + " \n " + e);
+        }
+    }
+
     private void createTrigger(String tableName) throws PSQLJsonBException {
         String query = String.format("CREATE TRIGGER set_timestamp" +
                 " BEFORE UPDATE ON %s" +
@@ -261,8 +272,17 @@ public class EntityDAO {
         return gson.toJson(entity.getDocument());
     }
 
-    private <T> String getTableName(Class<T> clazz) {
+    private <T> String getTableName(Class<T> clazz) throws PSQLJsonBException {
         String clazzName = clazz.getName();
-        return clazzName.substring(clazzName.lastIndexOf(".") + 1, clazzName.length());
+
+        if(!clazz.isAnnotationPresent(dao.annotations.Entity.class))
+            throw new PSQLJsonBException(String.format("ERROR - Class %s not annotated with $s", clazzName, dao.annotations.Entity.class.getName()));
+
+        String tableName = clazzName.substring(clazzName.lastIndexOf(".") + 1, clazzName.length());
+
+        dao.annotations.Entity entity = clazz.getAnnotation(dao.annotations.Entity.class);
+        String schema = entity.schema();
+
+        return !schema.equals("") ? schema + "." + tableName : tableName;
     }
 }
