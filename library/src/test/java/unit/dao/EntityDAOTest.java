@@ -3,7 +3,7 @@ package unit.dao;
 import com.google.gson.Gson;
 import dao.EntityDAO;
 import dao.PSQLJsonBException;
-import entity.Entity;
+import entity.domain.Entity;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package entity;
+package entity.domain;
 
 import java.time.LocalDateTime;
 import java.util.Map;

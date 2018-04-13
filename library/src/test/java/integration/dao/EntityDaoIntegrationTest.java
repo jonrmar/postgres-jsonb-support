@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import dao.EntityDAO;
 import jdbc.ConnectionException;
 import dao.PSQLJsonBException;
-import entity.Entity;
+import entity.domain.Entity;
 import jdbc.ConnectionFactory;
 import org.junit.Before;
 import org.junit.Test;
