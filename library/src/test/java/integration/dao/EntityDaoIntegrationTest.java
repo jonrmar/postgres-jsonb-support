@@ -172,6 +172,49 @@ public class EntityDaoIntegrationTest {
         assertThat(record, new ReflectionEquals(records.get(0), excludedFields()));
     }
 
+    @Test
+    public void selectNativeQueryTest() throws PSQLJsonBException {
+        Record record = buildDefaultRecord();
+        setupInicial(record);
+        String query = "select * from record";
+
+        List<Record> records = entityDAO.selectNativeQuery(query, Record.class);
+
+        assertEquals(1, records.size());
+        assertThat(record, new ReflectionEquals(records.get(0), excludedFields()));
+    }
+
+    @Test(expected = PSQLJsonBException.class)
+    public void selectNativeQueryInvalidQueryTest() throws PSQLJsonBException {
+        Record record = buildDefaultRecord();
+        setupInicial(record);
+        String query = "select from record";
+
+        entityDAO.selectNativeQuery(query, Record.class);
+    }
+
+    @Test
+    public void deleteNativeQueryTest() throws PSQLJsonBException {
+        Record record = buildDefaultRecord();
+        setupInicial(record);
+        String query = "delete from record where document ->> 'age' = '30'";
+
+        entityDAO.nativeQuery(query);
+
+        List<Record> records = entityDAO.findAll(Record.class);
+
+        assertEquals(0, records.size());
+    }
+
+    @Test(expected = PSQLJsonBException.class)
+    public void deleteNativeQueryInvalidQueryTest() throws PSQLJsonBException {
+        Record record = buildDefaultRecord();
+        setupInicial(record);
+        String query = "delete from bla";
+
+        entityDAO.selectNativeQuery(query, Record.class);
+    }
+
     private void setupInicial(Record record) throws PSQLJsonBException {
         entityDAO.exportTable("record");
         entityDAO.save(record);
