@@ -13,7 +13,7 @@ import java.util.List;
 public class EntityService {
 
     private static final int CLASSES_SIZE = 8;
-    public static final String EMPTY_SCHEMA = "";
+    private static final String EMPTY_SCHEMA = "";
     private EntityDAO entityDAO;
 
 
