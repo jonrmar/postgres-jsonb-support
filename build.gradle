@@ -15,5 +15,6 @@ subprojects{
 
         testCompile group: 'junit', name: 'junit', version: '4.12'
         testCompile "org.mockito:mockito-core:1.+"
+        testCompile group: 'org.testcontainers', name: 'postgresql', version: '1.5.1'
     }
 }
