@@ -1,6 +1,6 @@
 # postgres-jsonb-support
 
-This project has the objective to supply an easiest way to map plain Java Objects to Postgres Jsonb type. 
+This project has the objective to supply a way to let postgres to work as a document database. So in this project we map plain Java Objects to Postgres Jsonb type. 
 
 ## DockerFile
 
