@@ -1,30 +1,28 @@
 package examples;
 
 import dao.EntityDAO;
-import jdbc.ConnectionException;
 import dao.PSQLJsonBException;
-import entity.EntityService;
 import document.Record;
+import entity.EntityService;
+import jdbc.Connection;
+import jdbc.ConnectionException;
 import jdbc.ConnectionFactory;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static entity.EntityFilter.eq;
 
 public class Delete {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         //Get Database Connection
         try {
-            Connection connection = new ConnectionFactory()
-                    .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+            ConnectionFactory factory = new ConnectionFactory("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+            Connection connection = factory.createConnection();
 
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
             entityDAO.delete(eq("age", "30"), Record.class);
 
             connection.close();
-        } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
+        } catch (ConnectionException | PSQLJsonBException e) {
             e.printStackTrace();
         }
     }

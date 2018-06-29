@@ -2,36 +2,37 @@ package entity;
 
 import com.google.gson.Gson;
 import dao.EntityDAO;
-import entity.annotations.Entity;
 import dao.PSQLJsonBException;
+import entity.annotations.Entity;
+import jdbc.Connection;
 
 import java.io.File;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class EntityService {
 
     private static final int CLASSES_SIZE = 8;
     private static final String EMPTY_SCHEMA = "";
+    private final static Logger logger = Logger.getLogger(EntityService.class.getName());
     private EntityDAO entityDAO;
 
-
-    public EntityService(Connection connection) throws PSQLJsonBException, ClassNotFoundException {
+    public EntityService(jdbc.Connection connection) throws PSQLJsonBException {
         Gson gson = new Gson();
-        this.entityDAO = new EntityDAO(connection, gson);
-        listFiles();
+        this.entityDAO = new EntityDAO(connection.getConnection(), gson);
+        listFiles(connection);
     }
 
     public EntityDAO getEntityDAO() {
         return entityDAO;
     }
 
-    private void listFiles() throws PSQLJsonBException, ClassNotFoundException {
+    private void listFiles(Connection connection) throws PSQLJsonBException {
+        try {
         List<File> list = getFiles(System.getProperty("java.class.path"));
         for (File file : list) {
             String fileName = getFileToLoad(file);
-
             ClassLoader classLoader = ClassLoader.getSystemClassLoader();
             Class clazz = classLoader.loadClass(fileName);
 
@@ -41,14 +42,26 @@ public class EntityService {
 
                 Entity annotation = (Entity) clazz.getAnnotation(Entity.class);
 
-                if (!annotation.schema().equals(EMPTY_SCHEMA)) {
-                    String schema = annotation.schema();
-                    entityDAO.createSchema(schema);
-                    entityDAO.exportTable(schema+"."+tableName);
-                } else
-                    entityDAO.exportTable(tableName);
+                exportFromProperties(tableName, annotation, connection);
             }
         }
+        } catch (PSQLJsonBException | ClassNotFoundException ex) {
+            String message = "Error catch on:" + ex;
+            logger.severe(message);
+            throw new PSQLJsonBException(message);
+        }
+    }
+
+    private void exportFromProperties(String tableName, Entity annotation, Connection connection)
+            throws PSQLJsonBException {
+        if (!annotation.schema().equals(EMPTY_SCHEMA)) {
+            String schema = annotation.schema();
+            if (connection.isExportSchema())
+                entityDAO.createSchema(schema);
+            if (connection.isExportTable())
+                entityDAO.exportTable(schema + "." + tableName);
+        } else if (connection.isExportTable())
+            entityDAO.exportTable(tableName);
     }
 
     private String getFileToLoad(File file) {

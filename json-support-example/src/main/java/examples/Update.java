@@ -1,14 +1,14 @@
 package examples;
 
 import dao.EntityDAO;
-import jdbc.ConnectionException;
 import dao.PSQLJsonBException;
+import document.Record;
 import entity.EntityFilter;
 import entity.EntityService;
-import document.Record;
+import jdbc.Connection;
+import jdbc.ConnectionException;
 import jdbc.ConnectionFactory;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,13 +29,13 @@ public class Update {
 
         //Get Database Connection
         try {
-            Connection connection = new ConnectionFactory()
-                    .getConnection(    "jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+            ConnectionFactory factory = new ConnectionFactory("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+            Connection connection = factory.createConnection();
 
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
             entityDAO.update(record, EntityFilter.eq("age", "30"));
 
-        } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
+        } catch (ConnectionException | PSQLJsonBException e) {
             e.printStackTrace();
         }
     }

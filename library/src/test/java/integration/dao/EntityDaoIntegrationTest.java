@@ -5,6 +5,7 @@ import dao.EntityDAO;
 import dao.PSQLJsonBException;
 import entity.EntityFilter;
 import entity.domain.Entity;
+import jdbc.Connection;
 import jdbc.ConnectionException;
 import jdbc.ConnectionFactory;
 import org.junit.After;
@@ -12,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,15 +28,16 @@ public class EntityDaoIntegrationTest {
     private Connection connection;
 
     @Before
-    public void setUp() throws SQLException, ConnectionException {
-        this.connection = new ConnectionFactory().getConnection("jdbc:tc:postgresql://localhost:5433/docker", "docker", "docker");
-        connection.setAutoCommit(false);
+    public void setUp() throws ConnectionException, SQLException {
+        ConnectionFactory factory = new ConnectionFactory("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+        this.connection = factory.createConnection();
+        this.connection.getConnection().setAutoCommit(false);
         Gson gson = new Gson();
-        this.entityDAO = new EntityDAO(connection, gson);
+        this.entityDAO = new EntityDAO(connection.getConnection(), gson);
     }
 
     @After
-    public void after() throws SQLException {
+    public void after() throws ConnectionException {
         this.connection.close();
     }
 

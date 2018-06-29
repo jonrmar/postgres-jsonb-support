@@ -19,7 +19,7 @@ public class Record{
 
     public Record(){}
 
-    Record(String name, String age, String hobby, Map<String, String> favoriteFoods, List<String> sports) {
+    public Record(String name, String age, String hobby, Map<String, String> favoriteFoods, List<String> sports) {
         this.name = name;
         this.age = age;
         this.hobby = hobby;

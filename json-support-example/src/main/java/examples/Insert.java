@@ -1,21 +1,20 @@
 package examples;
 
 import dao.EntityDAO;
-import jdbc.ConnectionException;
 import dao.PSQLJsonBException;
-import entity.EntityService;
 import document.Record;
+import entity.EntityService;
+import jdbc.Connection;
+import jdbc.ConnectionException;
 import jdbc.ConnectionFactory;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Insert {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         Map<String, String> favoriteFoods = new HashMap<>();
         favoriteFoods.put("desert", "banana");
         favoriteFoods.put("lunch", "fried chicken");
@@ -30,15 +29,17 @@ public class Insert {
 
         //Get Database Connection
         try {
-            Connection connection = new ConnectionFactory()
-                    .getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+            ConnectionFactory factory = new ConnectionFactory("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+            Connection connection = factory.createConnection();
+            connection.enableExportSchema();
+            connection.enableExportTable();
 
             EntityDAO entityDAO = new EntityService(connection).getEntityDAO();
             entityDAO.save(record);
 
             connection.close();
-        } catch (ConnectionException | PSQLJsonBException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (ConnectionException | PSQLJsonBException ex) {
+            ex.printStackTrace();
         }
     }
 }
