@@ -4,9 +4,11 @@ This project has the objective to supply an easiest way to map plain Java Object
 
 ## DockerFile
 
-For development purpos, use an postgres docker image. Go to resource directory and run:
+For development purpose, use an postgres docker image. Go to resource directory and run:
 
 `docker-compose up`
+
+For running the tests docker needs to be up.
 
 ## Getting Started:
 
@@ -24,9 +26,18 @@ The default fields (id, createdAt and updatedAt) are used for managment purpose 
  
 4. Get database connection:
 
-`Connection connection = new ConnectionFactory().getConnection("jdbc:postgresql://localhost:5433/docker", "docker", "docker");`
+`ConnectionFactory factory = new ConnectionFactory("jdbc:postgresql://localhost:5433/docker", "docker", "docker");
+ Connection connection = factory.createConnection();`
+             
+5. Export table and Schema are optional properties, to enable them use methods below:
 
-5. Use operations below.
+`connection.enableExportSchema();
+connection.enableExportTable();
+`
+With this, it will create the respective table and schema in your database if they do not already exists.
+
+6. Use operations below.
+
 
 ## Supported database operations:
 
