@@ -1,0 +1,5 @@
+dependencies{
+//    compile project(':library')
+    compile 'io.github.jonrmar:postgres-as-document-db:1.0.2'
+
+}

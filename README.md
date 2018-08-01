@@ -4,7 +4,7 @@ This project has the objective to supply a way to let postgres to work as a docu
 
 ## DockerFile
 
-For development purpose, use an postgres docker image. Go to resource directory and run:
+For development purpose, use an postgres docker image. Go to root directory and run:
 
 `docker-compose up`
 

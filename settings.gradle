@@ -1,3 +1,3 @@
 rootProject.name = 'postgres-jsonb-support'
-include 'library'
-include 'json-support-example'
+include 'json-as-document-db'
+include 'examples'
