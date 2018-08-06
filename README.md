@@ -36,8 +36,11 @@ connection.enableExportTable();
 `
 With this, it will create the respective table and schema in your database if they do not already exists.
 
-6. Use operations below.
+6. Get instance of DAO:
 
+`EntityDAO entityDAO = new EntityService(connection).getEntityDAO();`
+
+6. Use operations below.
 
 ## Supported database operations:
 
@@ -62,7 +65,7 @@ With this, it will create the respective table and schema in your database if th
 
 Add one of the filters above in find() method to apply it. Example:
 
-`List<Entity> entities = entityDAO.find(eq("fruit", "orange""));`
+`List<Entity> entities = entityDAO.find(eq("fruit", "orange""), Entity.class);`
 
 The native query for this operation will be:
 
@@ -71,7 +74,7 @@ The native query for this operation will be:
 ##### To query nested fields on json use "." syntax:
 Example:
 
-`List<Entity> entities = entityDAO.find(eq("fruits.breakfast", "orange""));`
+`List<Entity> entities = entityDAO.find(eq("fruits.breakfast", "orange""), Entity.class);`
 
 Native query:
 
@@ -81,11 +84,11 @@ Native query:
 
 Use metho asList in filters operation. Example:
 
-`List<Entity> entities = entityDAO.find(eq("sports", asList( "soccer")));`
+`List<Entity> entities = entityDAO.find(eq("sports", asList( "soccer")), Entity.class);`
 
 Native query:
 
 `select * from entity where document -> 'sports' -> '{"swim", "soccer"}';`
 
 ### Code Examples
-For more examples, go to json-support-example project and run the Application class.
+For more examples, go to examples project.
