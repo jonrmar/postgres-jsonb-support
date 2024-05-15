@@ -4,7 +4,7 @@ This project has the objective to supply a way to let postgres to work as a docu
 
 ## DockerFile
 
-For development purpose, use an postgres docker image. Go to root directory and run:
+For development purpose, use a postgres docker image. Go to root directory and run:
 
 `docker-compose up`
 
@@ -12,7 +12,7 @@ For running the tests docker needs to be up.
 
 ## Getting Started:
 
-1. Create a POJO that you want to seriazile os document with at least the followings fields:
+1. Create a POJO that you want to serialize os document with at least the followings fields:
 
 `Long id
 LocalDateTime createdAt
@@ -40,7 +40,7 @@ With this, it will create the respective table and schema in your database if th
 
 `EntityDAO entityDAO = new EntityService(connection).getEntityDAO();`
 
-6. Use operations below.
+7. Use operations below.
 
 ## Supported database operations:
 
@@ -50,7 +50,7 @@ With this, it will create the respective table and schema in your database if th
 4. Update `entityDAO.update(Object, filters... )`
 5. Delete `entityDAO.delete( filters..., Class)`
 6. Select Native Query: `entityDAO.selectNativeQuery(query, Class)`
-6. Native Query: `entityDAO.selectNativeQuery(query)`
+7. Native Query: `entityDAO.nativeQuery(query)`
 
 ### Filters supported:
 * eq : =
@@ -82,7 +82,7 @@ Native query:
 
 #### To query an Array:
 
-Use metho asList in filters operation. Example:
+Use method asList in filters operation. Example:
 
 `List<Entity> entities = entityDAO.find(eq("sports", asList( "soccer")), Entity.class);`
 
