@@ -5,7 +5,6 @@ import integration.dao.Record;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,6 @@ public class ObjectToEntityTest {
         assertEquals(entity.getDocument().get("sports").toString(), buildDocument().get("sports"));
         assertEquals(entity.getDocument().get("favoriteFoods").toString(), buildDocument().get("favoriteFoods"));
     }
-
     private Record newRecord() {
         Map<String, String> favoriteFoods = new HashMap<>();
         favoriteFoods.put("desert", "banana");

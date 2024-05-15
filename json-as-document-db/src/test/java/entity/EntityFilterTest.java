@@ -15,7 +15,6 @@ public class EntityFilterTest {
 
         Assert.assertEquals(expected, filter);
     }
-
     @Test
     public void arrayEqTest() {
         String expected = "-> 'age' = '[\"30\",\"45\"]'";
